@@ -1,42 +1,64 @@
 <html>
-  <body>
-    <h1>Parse artist data from The Metropolitan Museum of Art</h1>
-    <div>Based on criteria set in form, parses a public <a href="https://github.com/metmuseum/openaccess/blob/master/MetObjects.csv" target=_blank>CSV</a> file from The Met and displays results as JSON, grouped by artist</div>
-    <br><br>
-    <?php
-      $checkedA = '';
-      $checkedJ = '';
-      if (isset($_GET['displayAs']) && $_GET['displayAs'] == "array"){ $checkedA = "checked";
-      } else{ $checkedJ = "checked"; }
-      $start = (isset($_GET['start'])) ? $_GET['start'] : 1400;
-      $end = (isset($_GET['end'])) ? $_GET['end'] : 1499;
-    ?>
-    <form>
-      Start Year:<br />
-      <input type="text" name="start" value="<?php print $start; ?>">
-      <br>
-      End Year:<br />
-      <input type="text" name="end" value="<?php print $end; ?>"><br /><br />
-      Display As:<br />
-      <input type="radio" name="displayAs" value="json" <?php print $checkedJ; ?>>JSON<br />
-      <input type="radio" name="displayAs" value="array" <?php print $checkedA; ?>>Array<br />
-      <br />
-      <input type="submit" value="Submit">
-    </form>
-    <hr>
-
-    <?php if(!empty($_GET["start"]) && !empty($_GET["end"])){
-      $artistResults = getResults($_GET["start"], $_GET["end"]);
-
-      if ($_GET["displayAs"] == "json"){
-        ksort($artistResults);
-        $artistResults = array_values($artistResults);
-        $result = json_encode($artistResults, JSON_HEX_QUOT | JSON_HEX_TAG);
-        print $result;
-      }else{
-        echo '<pre>'; print_r($artistResults); echo '</pre>';
+  <head>
+    <link href="https://fonts.googleapis.com/css?family=Poppins" rel="stylesheet">
+    <style>
+      body{
+        font-family: 'Poppins', sans-serif;
       }
-    } ?>
+      .form-block{
+        border-bottom: 1px solid #000;
+        position: fixed;
+        top: 0;
+        width: 100%;
+        height: 400px;
+        background-color: #FFF;
+        text-align: center;
+      }
+      .form-results{
+        margin-top: 420px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="form-block">
+      <h1>Parse artist data from The Metropolitan Museum of Art</h1>
+      <div>Based on criteria set in form, parses a public <a href="https://github.com/metmuseum/openaccess/blob/master/MetObjects.csv" target=_blank>CSV</a> file from The Met and displays results as JSON, grouped by artist</div>
+      <br>
+      <?php
+        $checkedA = '';
+        $checkedJ = '';
+        if (isset($_GET['displayAs']) && $_GET['displayAs'] == "array"){ $checkedA = "checked";
+        } else{ $checkedJ = "checked"; }
+        $start = (isset($_GET['start'])) ? $_GET['start'] : 1400;
+        $end = (isset($_GET['end'])) ? $_GET['end'] : 1499;
+      ?>
+      <form>
+        Start Year:<br />
+        <input type="text" name="start" value="<?php print $start; ?>">
+        <br>
+        End Year:<br />
+        <input type="text" name="end" value="<?php print $end; ?>"><br /><br />
+        Display As:<br />
+        <input type="radio" name="displayAs" value="json" <?php print $checkedJ; ?>>JSON<br />
+        <input type="radio" name="displayAs" value="array" <?php print $checkedA; ?>>Array<br />
+        <br />
+        <input type="submit" value="Submit">
+      </form>
+    </div>
+    <div class="form-results">
+      <?php if(!empty($_GET["start"]) && !empty($_GET["end"])){
+        $artistResults = getResults($_GET["start"], $_GET["end"]);
+
+        if ($_GET["displayAs"] == "json"){
+          ksort($artistResults);
+          $artistResults = array_values($artistResults);
+          $result = json_encode($artistResults, JSON_HEX_QUOT | JSON_HEX_TAG);
+          print $result;
+        }else{
+          echo '<pre>'; print_r($artistResults); echo '</pre>';
+        }
+      } ?>
+    </div>
 
   </body>
 
